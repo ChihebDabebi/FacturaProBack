@@ -1,7 +1,7 @@
 // ceci est un exemple :
 const express =  require('express');
 const router = express.Router();
-const {Book} = require('../models/book');
+const {Book} = require('../models/invoice');
 
 router.get('/', async (req,res,next)=>{
     const books = await Book.find();

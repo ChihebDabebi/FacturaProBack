@@ -1,5 +1,5 @@
 {
   "mongo": {
-    "uri": "mongodb://localhost:27017/mydb"
+    "uri": "mongodb+srv://chiheb:ripazha135@cluster0.0dvu0oq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   }
 }

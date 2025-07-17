@@ -1,4 +1,4 @@
-const {Book} = require('../models/book');
+const {Book} = require('../models/invoice');
 
 const searchAvailableBooks = async () => {
     const books = await Book.find({available:true});
