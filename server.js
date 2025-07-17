@@ -5,9 +5,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
 
-const bookRouter = require('./routers/book');
+const clientRouter = require('./routers/clientRouter');
 // ceci est un exemple :
-const contactRouter = require('./routers/contact');
+const invoiceRouter = require('./routers/invoiceRouter');
 
 const {searchAvailableBooks} = require('./services/book');
 
@@ -21,11 +21,18 @@ app.set('view engine', 'twig');
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-app.use('/book', bookRouter);
+app.use('/client', clientRouter);
 // ceci est un exemple :
-app.use('/contact', contactRouter);
+app.use('/invoice', invoiceRouter);
 
 mongoose.connect(configDb.mongo.uri);
+mongoose.connection.on('connected', () => {
+  console.log('MongoDB connected');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
 
 const io = require('socket.io')(server);
 io.on("connection", (socket)=>{
@@ -41,3 +48,4 @@ io.on("connection", (socket)=>{
 server.listen(3000, ()=>{
     console.log('server is running on http://localhost:3000');
 });
+ 

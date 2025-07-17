@@ -40,7 +40,7 @@ const paiementSchema = new mongoose.Schema({
   },
 });
 
-const invoiceSchema = new mongoose.Schema({
+const invoice = new mongoose.Schema({
   numero: {
     type: String,
     required: true,
@@ -89,6 +89,9 @@ const invoiceSchema = new mongoose.Schema({
     type: String,
   },
 });
+
+invoice.index({ clientId: 1, statut: 1, dateEcheance: 1 });
+
 
 const Invoice = mongoose.model("invoices", invoice);
 
