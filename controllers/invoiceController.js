@@ -1,4 +1,5 @@
 const { Invoice } = require('../models/invoice');
+const { Client } = require('../models/client');
 
 exports.createInvoice = async (req, res) => {
   try {
@@ -43,6 +44,22 @@ exports.getInvoiceById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getInvoicesByClientId = async (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+    const invoices = await Invoice.find({ clientId });
+    
+    if (invoices.length === 0) {
+      return res.status(404).json({ message: 'Aucune facture trouvée pour ce client' });
+    }
+
+    res.status(200).json(invoices);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.updateInvoice = async (req, res) => {
   try {

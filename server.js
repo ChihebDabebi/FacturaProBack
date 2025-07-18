@@ -17,7 +17,8 @@ const server = http.createServer(app);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
- 
+require('./models/client');
+require('./models/invoice');
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
