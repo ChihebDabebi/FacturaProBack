@@ -4,13 +4,20 @@ exports.createInvoice = async (req, res) => {
   try {
     const now = new Date();
     const year = now.getFullYear().toString().slice(2);
-    const month = (now .getMonth()+1).toString();
+    const month = (now.getMonth() + 1).toString();
     const day = now.getDay().toString();
     const min = now.getMinutes().toString();
     const mills = now.getMilliseconds().toString();
     const numero = `FAC-${year}${month}${day}-${min}${mills}`;
     const newInvoice = new Invoice(req.body);
-    newInvoice.numero = numero ;
+    newInvoice.produits.forEach(e => {
+      newInvoice.totalHT += e.prixUnitaire * e.quantite;
+      if (e.tva != 0) {
+        newInvoice.tva += (e.prixUnitaire * e.quantite) * (e.tva / 100);
+      }
+    });
+    newInvoice.totalTTC = newInvoice.totalHT + newInvoice.tva;
+    newInvoice.numero = numero;
     await newInvoice.save();
     res.status(201).json(newInvoice);
   } catch (error) {

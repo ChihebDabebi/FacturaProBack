@@ -63,22 +63,26 @@ const invoice = new mongoose.Schema({
   totalHT: {
     type: Number,
     required: true,
+    default: 0,
+
   },
   tva: {
     type: Number,
     required: true,
+    default: 0,
   },
   totalTTC: {
     type: Number,
     required: true,
+    default: 0,
   },
   paiements: [paiementSchema],
-  
+
   dateCreation: {
     type: Date,
     default: Date.now,
   },
- 
+
 });
 
 invoice.index({ clientId: 1, statut: 1, dateEcheance: 1 });
@@ -86,4 +90,4 @@ invoice.index({ clientId: 1, statut: 1, dateEcheance: 1 });
 
 const Invoice = mongoose.model("invoices", invoice);
 
-module.exports = {Invoice};
+module.exports = { Invoice };
