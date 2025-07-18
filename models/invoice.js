@@ -17,11 +17,7 @@ const produitSchema = new mongoose.Schema({
   tva: {
     type: Number,
     default: 0,
-  },
-  totalLigne: {
-    type: Number,
-    required: true,
-  },
+  }
 });
 
 const paiementSchema = new mongoose.Schema({
@@ -43,7 +39,6 @@ const paiementSchema = new mongoose.Schema({
 const invoice = new mongoose.Schema({
   numero: {
     type: String,
-    required: true,
     unique: true,
   },
   clientId: {
@@ -78,16 +73,12 @@ const invoice = new mongoose.Schema({
     required: true,
   },
   paiements: [paiementSchema],
-  note: {
-    type: String,
-  },
+  
   dateCreation: {
     type: Date,
     default: Date.now,
   },
-  pdfUrl: {
-    type: String,
-  },
+ 
 });
 
 invoice.index({ clientId: 1, statut: 1, dateEcheance: 1 });

@@ -2,7 +2,15 @@ const { Invoice } = require('../models/invoice');
 
 exports.createInvoice = async (req, res) => {
   try {
+    const now = new Date();
+    const year = now.getFullYear().toString().slice(2);
+    const month = (now .getMonth()+1).toString();
+    const day = now.getDay().toString();
+    const min = now.getMinutes().toString();
+    const mills = now.getMilliseconds().toString();
+    const numero = `FAC-${year}${month}${day}-${min}${mills}`;
     const newInvoice = new Invoice(req.body);
+    newInvoice.numero = numero ;
     await newInvoice.save();
     res.status(201).json(newInvoice);
   } catch (error) {
