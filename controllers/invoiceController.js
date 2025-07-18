@@ -48,8 +48,10 @@ exports.getInvoiceById = async (req, res) => {
 exports.getInvoicesByClientId = async (req, res) => {
   try {
     const clientId = req.params.clientId;
-    const invoices = await Invoice.find({ clientId });
-    
+    const invoices = await Invoice.find({ clientId }).populate('clientId');
+    console.log("params:", req.params);
+    console.log("clientId:", req.params.clientId);
+
     if (invoices.length === 0) {
       return res.status(404).json({ message: 'Aucune facture trouvée pour ce client' });
     }
