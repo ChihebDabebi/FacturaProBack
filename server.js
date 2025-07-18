@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const path = require("path");
+const cors = require('cors');
 
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
@@ -21,6 +22,7 @@ require('./models/client');
 require('./models/invoice');
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(cors());
 
 app.use('/client', clientRouter);
 // ceci est un exemple :

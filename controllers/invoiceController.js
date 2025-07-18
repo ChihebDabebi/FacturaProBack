@@ -6,7 +6,11 @@ exports.createInvoice = async (req, res) => {
     const now = new Date();
     const year = now.getFullYear().toString().slice(2);
     const month = (now.getMonth() + 1).toString();
-    const day = now.getDay().toString();
+    const day = now.getDate().toString();
+    console.log(now);
+    console.log(day);
+
+
     const min = now.getMinutes().toString();
     const mills = now.getMilliseconds().toString();
     const numero = `FAC-${year}${month}${day}-${min}${mills}`;
