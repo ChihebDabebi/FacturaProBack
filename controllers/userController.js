@@ -1,21 +1,16 @@
 const { User, Client } = require('../models/user');
 
+const authController = require('./authController');
+
 exports.createUser = async (req, res) => {
   try {
-    const { role, ...data } = req.body;
+    // Ensure that role is set to 'client'
+    req.body.role = 'client';
 
-    let newUser;
-    if (role === 'client') {
-      newUser = new Client(data); 
-    } else {
-      newUser = new User(data); 
-    }
-
-    await newUser.save();
-    res.status(201).json(newUser);
+    // Delegate to authController's register method
+    await authController.register(req, res);
   } catch (err) {
-    console.error("Create user error:", err);
-    res.status(500).json({ message: 'Erreur lors de la création de l’utilisateur.' });
+    res.status(500).json({ message: err.message });
   }
 };
 

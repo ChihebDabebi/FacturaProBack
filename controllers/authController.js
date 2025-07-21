@@ -22,15 +22,15 @@ exports.register = async (req, res) => {
             const client = new User({ nom, prenom, email, password: hashedPassword, role, entreprise });
             await client.save();
 
-            res.status(201).json({ message: "Client registered successfully." });
+          return  res.status(201).json({ message: "Client registered successfully." });
         }
 
         const user = new User({ nom, prenom, email, password: hashedPassword, role });
         await user.save();
 
-        res.status(201).json({ message: "User registered successfully." });
+       return res.status(201).json({ message: "User registered successfully." });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+       return res.status(400).json({ message: error.message });
     }
 };
 
