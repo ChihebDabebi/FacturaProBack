@@ -1,9 +1,7 @@
 const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { generateAccessToken, generateRefreshToken } = require('../utils/authUtils');
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET ;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
@@ -37,23 +35,42 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: 'Utilisateur non trouvé' });
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-        const valid = await bcrypt.compare(password, user.password);
-        if (!valid) return res.status(400).json({ message: 'Mot de passe incorrect' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
 
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
-        res.status(200).json({
-            accessToken,
-            refreshToken,
-            user: { id: user._id, nom: user.nom, role: user.role }
-        });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+    res
+      .cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .json({ accessToken });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.refresh = (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+
+    const accessToken = generateAccessToken({ _id: user.id, role: user.role });
+    res.json({ accessToken });
+  });
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie('refreshToken').json({ message: 'Logged out' });
 };

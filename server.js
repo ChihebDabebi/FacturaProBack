@@ -2,28 +2,34 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
 
-const userRouter = require('./routers/userRouter');
-// ceci est un exemple :
-const invoiceRouter = require('./routers/invoiceRouter');
-const authRouter = require('./routers/authRouter');
+
 
 const {searchAvailableBooks} = require('./services/book');
 
 
 const app = express();
 const server = http.createServer(app);
-
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true 
+}));
+const userRouter = require('./routers/userRouter');
+// ceci est un exemple :
+const invoiceRouter = require('./routers/invoiceRouter');
+const authRouter = require('./routers/authRouter');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
 require('./models/user');
 require('./models/invoice');
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({extended: false}));
-app.use(cors());
 
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
