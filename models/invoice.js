@@ -43,7 +43,7 @@ const invoice = new mongoose.Schema({
   },
   clientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'clients',
+    ref: 'users',
     required: true,
   },
   dateEmission: {
