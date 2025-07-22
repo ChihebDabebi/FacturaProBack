@@ -31,11 +31,33 @@ exports.createInvoice = async (req, res) => {
 };
 
 exports.getAllInvoices = async (req, res) => {
+  const { clientName, dateEcheance, statut, totalTTC } = req.query;
+
+  let query = {};
+
+  // Search by client name (case-insensitive)
+  if (clientName) {
+    query['clientId.nom'] = { $regex: clientName, $options: 'i' };
+  }
+
+  if (dateEcheance) query.dateEcheance = { $eq: new Date(dateEcheance) };
+  if (statut) query.statut = statut;
+  if (totalTTC) query.totalTTC = { $eq: parseFloat(totalTTC) };
+
   try {
-    const invoices = await Invoice.find().populate('clientId');
-    res.status(200).json(invoices);
+    const factures = await Invoice.find(query)
+      .populate({
+        path: 'clientId',
+        match: clientName ? { name: { $regex: clientName, $options: 'i' } } : {},
+      })
+      .exec();
+
+    const filteredFactures = factures.filter(invoice => invoice.clientId !== null);
+
+    res.json(filteredFactures);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching invoices:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
