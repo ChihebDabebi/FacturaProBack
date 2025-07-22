@@ -31,34 +31,26 @@ exports.createInvoice = async (req, res) => {
 };
 
 exports.getAllInvoices = async (req, res) => {
-  const { clientName, dateEcheance, statut, totalTTC } = req.query;
+  const { client, dateEcheance, statut, totalTTC } = req.query;
+
 
   let query = {};
 
-  // Search by client name (case-insensitive)
-  if (clientName) {
-    query['clientId.nom'] = { $regex: clientName, $options: 'i' };
-  }
+  const matchingClients = await User.find({
+    nom: { $regex: client, $options: 'i' }
+  }).select('_id');
+
+  query.clientId = { $in: matchingClients.map(c => c._id) };
 
   if (dateEcheance) query.dateEcheance = { $eq: new Date(dateEcheance) };
   if (statut) query.statut = statut;
   if (totalTTC) query.totalTTC = { $eq: parseFloat(totalTTC) };
 
-  try {
-    const factures = await Invoice.find(query)
-      .populate({
-        path: 'clientId',
-        match: clientName ? { name: { $regex: clientName, $options: 'i' } } : {},
-      })
-      .exec();
 
-    const filteredFactures = factures.filter(invoice => invoice.clientId !== null);
 
-    res.json(filteredFactures);
-  } catch (error) {
-    console.error('Error fetching invoices:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
+  const factures = await Invoice.find(query).populate('clientId');
+
+  res.json(factures);
 };
 
 exports.getInvoiceById = async (req, res) => {
