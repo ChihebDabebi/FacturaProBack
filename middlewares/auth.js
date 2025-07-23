@@ -1,12 +1,14 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'yoursecretkey';
+const JWT_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 exports.auth = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(403).json({ message: "Token missing" });
 
   try {
+    console.log(JWT_SECRET);
+    
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
