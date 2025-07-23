@@ -7,8 +7,7 @@ exports.createInvoice = async (req, res) => {
     const year = now.getFullYear().toString().slice(2);
     const month = (now.getMonth() + 1).toString();
     const day = now.getDate().toString();
-    console.log(now);
-    console.log(day);
+    
 
 
     const min = now.getMinutes().toString();
@@ -64,11 +63,15 @@ exports.getInvoiceById = async (req, res) => {
 
 exports.getInvoicesByClientId = async (req, res) => {
   try {
+    const {dateEcheance , statut , totalTTC} = req.query;
+    let query = {}
+    if(dateEcheance) query.dateEcheance = {$eq: new Date(dateEcheance)};
+    if(statut) query.statut = statut;
+    if(totalTTC) query.totalTTC = {$eq: parseFloat(totalTTC)};
     const clientId = req.params.clientId;
-    const invoices = await Invoice.find({ clientId }).populate('clientId');
-    console.log("params:", req.params);
-    console.log("clientId:", req.params.clientId);
+    const invoices = await Invoice.find({ clientId, ...query }).populate('clientId');
     
+
     if (invoices.length === 0) {
       return res.status(404).json({ message: 'Aucune facture trouvée pour ce client' });
     }

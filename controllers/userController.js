@@ -19,7 +19,6 @@ exports.getAllUsers = async (req, res) => {
     const {role} = req.query;
   
     const users = await User.find({role}).select('-password'); 
-    console.log("Users:", users);
     
     res.json(users);
   } catch (err) {
