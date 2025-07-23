@@ -1,4 +1,5 @@
-const { User, Client } = require('../models/user');
+const { User } = require('../models/user');
+const { Invoice } = require('../models/invoice');
 
 const authController = require('./authController');
 
@@ -55,6 +56,7 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id);
+    await Invoice.deleteMany({ clientId: req.params.id });
     if (!deleted) return res.status(404).json({ message: 'Utilisateur non trouvé.' });
     res.json({ message: 'Utilisateur supprimé.' });
   } catch (err) {
