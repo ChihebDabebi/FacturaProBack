@@ -70,11 +70,6 @@ exports.getInvoicesByClientId = async (req, res) => {
     if(totalTTC) query.totalTTC = {$eq: parseFloat(totalTTC)};
     const clientId = req.params.clientId;
     const invoices = await Invoice.find({ clientId, ...query }).populate('clientId');
-    
-
-    if (invoices.length === 0) {
-      return res.status(404).json({ message: 'Aucune facture trouvée pour ce client' });
-    }
 
     res.status(200).json(invoices);
   } catch (error) {
