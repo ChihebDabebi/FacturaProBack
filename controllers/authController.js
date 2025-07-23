@@ -16,16 +16,16 @@ const generateRefreshToken = (user) => {
 
 exports.register = async (req, res) => {
     try {
-        const { nom, prenom, email, password, role, entreprise } = req.body;
+        const { nom, prenom, email, password,telephone, role, entreprise } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         if (role == "client") {
-            const client = new User({ nom, prenom, email, password: hashedPassword, role, entreprise });
+            const client = new User({ nom, prenom, email, password: hashedPassword,telephone, role, entreprise });
             await client.save();
 
           return  res.status(201).json({ message: "Client registered successfully." });
         }
 
-        const user = new User({ nom, prenom, email, password: hashedPassword, role });
+        const user = new User({ nom, prenom, email, password: hashedPassword,telephone, role });
         await user.save();
 
        return res.status(201).json({ message: "User registered successfully." });

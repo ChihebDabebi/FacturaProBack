@@ -33,11 +33,10 @@ exports.createInvoice = async (req, res) => {
 exports.getAllInvoices = async (req, res) => {
   const { client, dateEcheance, statut, totalTTC } = req.query;
 
-
   let query = {};
 
   const matchingClients = await User.find({
-    nom: { $regex: client, $options: 'i' }
+    prenom: { $regex: client, $options: 'i' }
   }).select('_id');
 
   query.clientId = { $in: matchingClients.map(c => c._id) };
@@ -69,7 +68,7 @@ exports.getInvoicesByClientId = async (req, res) => {
     const invoices = await Invoice.find({ clientId }).populate('clientId');
     console.log("params:", req.params);
     console.log("clientId:", req.params.clientId);
-
+    
     if (invoices.length === 0) {
       return res.status(404).json({ message: 'Aucune facture trouvée pour ce client' });
     }

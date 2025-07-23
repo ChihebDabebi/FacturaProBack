@@ -16,7 +16,11 @@ exports.createUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find(); 
+    const {role} = req.query;
+  
+    const users = await User.find({role}).select('-password'); 
+    console.log("Users:", users);
+    
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs.' });
