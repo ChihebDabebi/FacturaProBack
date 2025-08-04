@@ -1,4 +1,6 @@
 const { User } = require('../models/user');
+const { Client } = require('../models/user');
+
 const { Invoice } = require('../models/invoice');
 
 const authController = require('./authController');
@@ -41,7 +43,7 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const updated = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const updated = await Client.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
