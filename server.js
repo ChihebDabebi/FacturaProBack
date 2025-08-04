@@ -20,6 +20,8 @@ app.use(cors({
   credentials: true 
 }));
 const userRouter = require('./routers/userRouter');
+const statsRouter = require('./routers/statsRouter');
+
 // ceci est un exemple :
 const invoiceRouter = require('./routers/invoiceRouter');
 const authRouter = require('./routers/authRouter');
@@ -33,6 +35,8 @@ app.use(express.urlencoded({extended: false}));
 
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
+app.use('/stats', statsRouter);
+
 
 // ceci est un exemple :
 app.use('/invoice', invoiceRouter);
