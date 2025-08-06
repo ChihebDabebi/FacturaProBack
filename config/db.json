@@ -1,5 +1,0 @@
-{
-  "mongo": {
-    "uri": "mongodb+srv://chiheb:ripazha135@cluster0.0dvu0oq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  }
-}

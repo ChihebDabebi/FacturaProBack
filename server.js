@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 const mongoose = require("mongoose");
-const configDb = require("./config/db.json");
 
 
 
@@ -16,7 +15,7 @@ const {searchAvailableBooks} = require('./services/book');
 const app = express();
 const server = http.createServer(app);
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.FRONT_URL,
   credentials: true 
 }));
 const userRouter = require('./routers/userRouter');
@@ -36,12 +35,12 @@ app.use(express.urlencoded({extended: false}));
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/stats', statsRouter);
-
+ 
 
 // ceci est un exemple :
 app.use('/invoice', invoiceRouter);
 
-mongoose.connect(configDb.mongo.uri);
+mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on('connected', () => {
   console.log('MongoDB connected');
 });
