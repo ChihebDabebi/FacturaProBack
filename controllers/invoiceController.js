@@ -46,7 +46,9 @@ exports.getAllInvoices = async (req, res) => {
 
 
 
-  const factures = await Invoice.find(query).populate('clientId');
+  const factures = await Invoice.find(query)
+                                .populate('clientId')
+                                .sort({dateCreation:-1});
 
   res.json(factures);
 };
@@ -69,7 +71,9 @@ exports.getInvoicesByClientId = async (req, res) => {
     if(statut) query.statut = statut;
     if(totalTTC) query.totalTTC = {$eq: parseFloat(totalTTC)};
     const clientId = req.params.clientId;
-    const invoices = await Invoice.find({ clientId, ...query , statut:{$ne:'brouillon'} }).populate('clientId');
+    const invoices = await Invoice.find({ clientId, ...query , statut:{$ne:'brouillon'} })
+                                  .populate('clientId')
+                                  .sort({dateCreation:-1});;
 
     res.status(200).json(invoices);
   } catch (error) {
