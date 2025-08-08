@@ -19,6 +19,13 @@ const produitSchema = new mongoose.Schema({
     default: 0,
   }
 });
+const signatureSchema = new mongoose.Schema({
+  image: String,
+  signedBy: String,
+  signedAt: Date,
+  ipAddress: String,
+  userAgent: String
+});
 
 const paiementSchema = new mongoose.Schema({
   date: {
@@ -82,6 +89,8 @@ const invoice = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  signature: signatureSchema
+
 
 });
 
