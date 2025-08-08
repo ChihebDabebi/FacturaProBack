@@ -68,10 +68,12 @@ exports.getInvoicesByClientId = async (req, res) => {
     const {dateEcheance , statut , totalTTC} = req.query;
     let query = {}
     if(dateEcheance) query.dateEcheance = {$eq: new Date(dateEcheance)};
-    if(statut) query.statut = statut;
+    if(statut) 
+    {query.statut = statut}
+    else{ query.statut = {$ne:'brouillon'} };
     if(totalTTC) query.totalTTC = {$eq: parseFloat(totalTTC)};
     const clientId = req.params.clientId;
-    const invoices = await Invoice.find({ clientId, ...query , statut:{$ne:'brouillon'} })
+    const invoices = await Invoice.find({ clientId, ...query })
                                   .populate('clientId')
                                   .sort({dateCreation:-1});;
 
