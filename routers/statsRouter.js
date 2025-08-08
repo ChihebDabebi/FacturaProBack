@@ -58,7 +58,7 @@ router.get('/:clientId', async (req, res) => {
   const { clientId } = req.params;
 
   try {
-    const invoices = await Invoice.find({ clientId });
+    const invoices = await Invoice.find({ clientId , statut: { $ne: 'brouillon' }});
 
     const totalInvoices = invoices.length;
     const paidInvoices = invoices.filter(inv => inv.statut === 'payée');
