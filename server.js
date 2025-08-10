@@ -25,7 +25,6 @@ const statsRouter = require('./routers/statsRouter');
 const invoiceRouter = require('./routers/invoiceRouter');
 const authRouter = require('./routers/authRouter');
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'twig');
 require('./models/user');
 require('./models/invoice');
 app.use(express.json());
